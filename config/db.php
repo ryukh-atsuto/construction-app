@@ -13,6 +13,10 @@ $charset = 'utf8mb4';
 // Note: host=localhost on Unix/Linux defaults to socket; use host=127.0.0.1 for TCP
 $connection_host = ($host === 'localhost' && getenv('RAILWAY_ENVIRONMENT')) ? '127.0.0.1' : $host;
 $dsn = "mysql:host=$connection_host;port=$port;dbname=$db;charset=$charset";
+
+// Dynamic Path Logic
+$app_path = getenv('MYSQLHOST') ? '/' : '/construction_app/';
+define('APP_PATH', $app_path);
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,

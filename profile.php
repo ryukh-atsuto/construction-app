@@ -65,7 +65,7 @@ include 'includes/header.php';
         <div class="absolute -bottom-12 left-8 flex items-end space-x-6 w-full pr-16">
             <div class="relative group flex-shrink-0">
                 <div class="w-32 h-32 rounded-3xl border-4 border-white dark:border-slate-900 shadow-xl overflow-hidden bg-white">
-                    <img id="avatar-preview" src="<?= htmlspecialchars(!empty($user['profile_picture']) && file_exists('uploads/profiles/' . $user['profile_picture']) ? ('/construction_app/uploads/profiles/' . $user['profile_picture']) : '/construction_app/assets/images/default_avatar.png') ?>" 
+                    <img id="avatar-preview" src="<?= htmlspecialchars(!empty($user['profile_picture']) && file_exists('uploads/profiles/' . $user['profile_picture']) ? (APP_PATH . 'uploads/profiles/' . $user['profile_picture']) : APP_PATH . 'assets/images/default_avatar.png') ?>" 
                          alt="User Profile" class="w-full h-full object-cover">
                 </div>
                 <label class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-white rounded-3xl">

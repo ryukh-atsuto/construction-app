@@ -15,6 +15,12 @@ $charset = 'utf8mb4';
 $connection_host = ($host === 'localhost' && getenv('RAILWAY_ENVIRONMENT')) ? '127.0.0.1' : $host;
 $dsn = "mysql:host=$connection_host;port=$port;dbname=$db;charset=$charset";
 
+// Dynamic Path Logic
+if (!defined('APP_PATH')) {
+    $app_path = getenv('MYSQLHOST') ? '/' : '/construction_app/';
+    define('APP_PATH', $app_path);
+}
+
 // PDO options for error handling and security
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, // Throw exceptions

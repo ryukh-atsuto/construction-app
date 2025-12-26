@@ -88,11 +88,11 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
                 <!-- Logo -->
                 <div class="flex">
                     <?php 
-                    $logo_link = isset($_SESSION['role']) ? "/construction_app/" . $_SESSION['role'] . "/welcome.php" : "/construction_app/index.php";
+                    $logo_link = isset($_SESSION['role']) ? APP_PATH . $_SESSION['role'] . "/welcome.php" : APP_PATH . "index.php";
                     ?>
                     <a href="<?= $logo_link ?>" class="flex-shrink-0 flex items-center group">
                         <div class="bg-brand-50 dark:bg-white/10 p-1 rounded-md mr-2">
-                             <img class="h-8 w-auto" src="/construction_app/assets/images/logo.png" alt="ConstructFlow Logo">
+                             <img class="h-8 w-auto" src="<?= APP_PATH ?>assets/images/logo.png" alt="ConstructFlow Logo">
                         </div>
                         <span class="text-xl font-bold text-gray-900 dark:text-white tracking-tight group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
                             ConstructFlow

@@ -1,3 +1,4 @@
+<?php include 'db.php'; ?>
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
@@ -45,7 +46,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex-shrink-0 flex items-center">
-                    <img class="h-12 w-auto mr-3 shadow-sm rounded-lg" src="/construction_app/assets/images/logo.png" alt="Logo">
+                    <img class="h-12 w-auto mr-3 shadow-sm rounded-lg" src="<?= APP_PATH ?>assets/images/logo.png" alt="Logo">
                     <span class="text-2xl font-extrabold text-white tracking-tight">ConstructFlow</span>
                 </div>
                 <div class="hidden md:flex space-x-8">
