@@ -22,8 +22,18 @@ $options = [
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (PDOException $e) {
-    // In production, log this error and show a generic message
-    // error_log($e->getMessage());
+    if (getenv('RAILWAY_ENVIRONMENT')) {
+        $debug_info = [
+            'host' => $host,
+            'port' => $port,
+            'db' => $db,
+            'user' => $user,
+            'env_detected' => !!getenv('MYSQLHOST')
+        ];
+        echo "<!-- DB Debug: " . json_encode($debug_info) . " -->";
+        exit('Database connection failed. Please ensure your Railway environment variables (MYSQLHOST, MYSQLUSER, etc.) are correctly set in the Variables tab.');
+    }
+    // For local, show the full error
     die("Database Connection Failed: " . $e->getMessage()); 
 }
 ?>

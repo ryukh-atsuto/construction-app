@@ -24,10 +24,16 @@ $options = [
 
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
-    // Uncomment next line for debugging
-    // echo "Database connected successfully!";
 } catch (PDOException $e) {
-    // Stop execution and show error
-    exit('Database connection failed: ' . $e->getMessage());
+    $debug_info = [
+        'host' => $host,
+        'port' => $port,
+        'db' => $db,
+        'user' => $user,
+        'env_detected' => !!getenv('MYSQLHOST')
+    ];
+    // Stop execution and show error with hidden debug metadata in comments
+    echo "<!-- DB Debug: " . json_encode($debug_info) . " -->";
+    exit('Database connection failed. Please ensure your Railway environment variables (MYSQLHOST, MYSQLUSER, etc.) are correctly set in the Variables tab.');
 }
 ?>
