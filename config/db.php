@@ -1,15 +1,18 @@
 <?php
 // config/db.php
 
-// Cloud-ready config: Use environment variables (Railway) or local defaults (XAMPP)
-$host = getenv('MYSQLHOST') ?: 'localhost';
-$db   = getenv('MYSQLDATABASE') ?: 'construction_management';
-$user = getenv('MYSQLUSER') ?: 'root';
-$pass = getenv('MYSQLPASSWORD') ?: '';
-$port = getenv('MYSQLPORT') ?: '3306';
+// Cloud-ready config: Prioritize Railway environment variables
+$host = getenv('MYSQLHOST') ?: (getenv('MYSQL_HOST') ?: 'localhost');
+$db   = getenv('MYSQLDATABASE') ?: (getenv('MYSQL_DATABASE') ?: 'construction_management');
+$user = getenv('MYSQLUSER') ?: (getenv('MYSQL_USER') ?: 'root');
+$pass = getenv('MYSQLPASSWORD') ?: (getenv('MYSQL_PASSWORD') ?: '');
+$port = getenv('MYSQLPORT') ?: (getenv('MYSQL_PORT') ?: '3306');
 $charset = 'utf8mb4';
 
-$dsn = "mysql:host=$host;port=$port;dbname=$db;charset=$charset";
+// Set up DSN (Data Source Name)
+// Note: host=localhost on Unix/Linux defaults to socket; use host=127.0.0.1 for TCP
+$connection_host = ($host === 'localhost' && getenv('RAILWAY_ENVIRONMENT')) ? '127.0.0.1' : $host;
+$dsn = "mysql:host=$connection_host;port=$port;dbname=$db;charset=$charset";
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
