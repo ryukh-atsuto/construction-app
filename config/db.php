@@ -2,16 +2,15 @@
 // config/db.php
 
 // Cloud-ready config: Prioritize Railway environment variables
-$host = getenv('MYSQLHOST') ?: (getenv('MYSQL_HOST') ?: 'localhost');
-$db   = getenv('MYSQLDATABASE') ?: (getenv('MYSQL_DATABASE') ?: 'construction_management');
-$user = getenv('MYSQLUSER') ?: (getenv('MYSQL_USER') ?: 'root');
-$pass = getenv('MYSQLPASSWORD') ?: (getenv('MYSQL_PASSWORD') ?: '');
-$port = getenv('MYSQLPORT') ?: (getenv('MYSQL_PORT') ?: '3306');
+$host = $_ENV['MYSQLHOST'] ?? $_SERVER['MYSQLHOST'] ?? getenv('MYSQLHOST') ?: (getenv('MYSQL_HOST') ?: 'localhost');
+$db   = $_ENV['MYSQLDATABASE'] ?? $_SERVER['MYSQLDATABASE'] ?? getenv('MYSQLDATABASE') ?: (getenv('MYSQL_DATABASE') ?: 'construction_management');
+$user = $_ENV['MYSQLUSER'] ?? $_SERVER['MYSQLUSER'] ?? getenv('MYSQLUSER') ?: (getenv('MYSQL_USER') ?: 'root');
+$pass = $_ENV['MYSQLPASSWORD'] ?? $_SERVER['MYSQLPASSWORD'] ?? getenv('MYSQLPASSWORD') ?: (getenv('MYSQL_PASSWORD') ?: '');
+$port = $_ENV['MYSQLPORT'] ?? $_SERVER['MYSQLPORT'] ?? getenv('MYSQLPORT') ?: (getenv('MYSQL_PORT') ?: '3306');
 $charset = 'utf8mb4';
 
 // Set up DSN (Data Source Name)
-// Note: host=localhost on Unix/Linux defaults to socket; use host=127.0.0.1 for TCP
-$connection_host = ($host === 'localhost' && getenv('RAILWAY_ENVIRONMENT')) ? '127.0.0.1' : $host;
+$connection_host = ($host === 'localhost' && (getenv('RAILWAY_ENVIRONMENT') || getenv('MYSQLHOST'))) ? '127.0.0.1' : $host;
 $dsn = "mysql:host=$connection_host;port=$port;dbname=$db;charset=$charset";
 
 // Dynamic Path Logic
@@ -26,16 +25,16 @@ $options = [
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (PDOException $e) {
-    if (getenv('RAILWAY_ENVIRONMENT')) {
+    if (getenv('MYSQLHOST') || getenv('MYSQL_HOST')) {
         $debug_info = [
             'host' => $host,
             'port' => $port,
             'db' => $db,
             'user' => $user,
-            'env_detected' => !!getenv('MYSQLHOST')
+            'error' => $e->getMessage()
         ];
         echo "<!-- DB Debug: " . json_encode($debug_info) . " -->";
-        exit('Database connection failed. Please ensure your Railway environment variables (MYSQLHOST, MYSQLUSER, etc.) are correctly set in the Variables tab.');
+        exit('Database connection failed: ' . $e->getMessage());
     }
     // For local, show the full error
     die("Database Connection Failed: " . $e->getMessage()); 
