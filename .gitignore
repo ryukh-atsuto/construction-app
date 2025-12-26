@@ -1,0 +1,32 @@
+# Local environment
+config/db_local.php
+.env
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# XAMPP / Local server logs
+logs/
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Dependencies (recursive)
+**/node_modules/
+vendor/
+
+# User uploads
+uploads/profiles/*
+!uploads/profiles/.gitkeep
+uploads/documents/*
+!uploads/documents/.gitkeep
+
+# Temporary files
+tmp/
+temp/
