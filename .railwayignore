@@ -1,0 +1,13 @@
+# System & Deps
+.git
+node_modules/
+vendor/
+.env
+
+# Build & Config trash
+Dockerfile
+.railwayignore
+
+# OS
+.DS_Store
+Thumbs.dbs/
