@@ -30,3 +30,13 @@ uploads/documents/*
 # Temporary files
 tmp/
 temp/
+
+
+.env
+/vendor/
+/node_modules/
+*.log
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

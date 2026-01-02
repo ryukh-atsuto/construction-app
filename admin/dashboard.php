@@ -1,6 +1,9 @@
 <?php
 // Admin Dashboard
-if (!defined('APP_RUNNING')) { header("Location: ../dashboard.php"); exit; }
+if (!defined('APP_RUNNING')) {
+    header("Location: ../dashboard.php");
+    exit;
+}
 // The session check and include header are handled by parent dashboard.php, 
 // BUT this file is now linked directly from welcome.php in some flows? 
 // No, the welcome page links to ../dashboard.php, which includes this file.
@@ -32,104 +35,135 @@ $users_recent = $pdo->query("SELECT * FROM Users ORDER BY created_at DESC LIMIT 
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Pending Projects -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-            <div class="p-6 border-b border-gray-100 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-gray-900">Pending Approvals</h3>
-                <span class="bg-brand-50 text-brand-700 py-1 px-3 rounded-full text-xs font-medium"><?= count($projects) ?> New</span>
+        <div
+            class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+            <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Pending Approvals</h3>
+                <span
+                    class="bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 py-1 px-3 rounded-full text-xs font-medium"><?= count($projects) ?>
+                    New</span>
             </div>
-            <div class="divide-y divide-gray-100">
+            <div class="divide-y divide-gray-100 dark:divide-gray-700">
                 <?php if (count($projects) > 0): ?>
                     <?php foreach ($projects as $p): ?>
-                    <div class="p-6 hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center justify-between mb-2">
-                            <h4 class="text-sm font-bold text-gray-900"><?= htmlspecialchars($p['project_name']) ?></h4>
-                            <span class="text-xs text-gray-500"><?= htmlspecialchars($p['owner_name']) ?></span>
+                        <div class="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-bold text-gray-900 dark:text-white">
+                                    <?= htmlspecialchars($p['project_name']) ?></h4>
+                                <span
+                                    class="text-xs text-gray-500 dark:text-gray-400"><?= htmlspecialchars($p['owner_name']) ?></span>
+                            </div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2">
+                                <?= htmlspecialchars($p['location']) ?> - $<?= number_format($p['total_project_cost']) ?></p>
+                            <div class="flex space-x-3">
+                                <form method="POST" action="admin/approve_project.php">
+                                    <input type="hidden" name="project_id" value="<?= $p['project_id'] ?>">
+                                    <button type="submit" name="action" value="approve"
+                                        class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-green-700 bg-green-100 hover:bg-green-200">
+                                        <i class="fas fa-check mr-1.5"></i> Approve
+                                    </button>
+                                </form>
+                                <form method="POST" action="admin/approve_project.php">
+                                    <input type="hidden" name="project_id" value="<?= $p['project_id'] ?>">
+                                    <button type="submit" name="action" value="reject"
+                                        class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200">
+                                        <i class="fas fa-times mr-1.5"></i> Reject
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                        <p class="text-sm text-gray-500 mb-4 line-clamp-2"><?= htmlspecialchars($p['location']) ?> - $<?= number_format($p['total_project_cost']) ?></p>
-                        <div class="flex space-x-3">
-                            <form method="POST" action="admin/approve_project.php">
-                                <input type="hidden" name="project_id" value="<?= $p['project_id'] ?>">
-                                <button type="submit" name="action" value="approve" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-green-700 bg-green-100 hover:bg-green-200">
-                                    <i class="fas fa-check mr-1.5"></i> Approve
-                                </button>
-                            </form>
-                             <form method="POST" action="admin/approve_project.php">
-                                <input type="hidden" name="project_id" value="<?= $p['project_id'] ?>">
-                                <button type="submit" name="action" value="reject" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200">
-                                    <i class="fas fa-times mr-1.5"></i> Reject
-                                </button>
-                            </form>
-                        </div>
-                    </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <div class="p-6 text-center text-gray-500">
-                        <i class="fas fa-check-circle text-4xl text-gray-300 mb-3 block"></i>
+                    <div class="p-6 text-center text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-check-circle text-4xl text-gray-300 dark:text-gray-600 mb-3 block"></i>
                         All caught up! No pending projects.
                     </div>
                 <?php endif; ?>
             </div>
-            <div class="bg-gray-50 px-6 py-3 border-t border-gray-100">
-                <a href="#" class="text-xs font-medium text-brand-600 hover:text-brand-800">View all history &rarr;</a>
+            <div class="bg-gray-50 dark:bg-gray-900/50 px-6 py-3 border-t border-gray-100 dark:border-gray-700">
+                <a href="#"
+                    class="text-xs font-medium text-brand-600 dark:text-brand-400 hover:text-brand-800 dark:hover:text-brand-300">View
+                    all history &rarr;</a>
             </div>
         </div>
 
         <!-- Pending Services -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-             <div class="p-6 border-b border-gray-100 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-gray-900">Service Requests</h3>
-                 <span class="bg-orange-50 text-orange-700 py-1 px-3 rounded-full text-xs font-medium"><?= count($services) ?> New</span>
+        <div
+            class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+            <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Service Requests</h3>
+                <span
+                    class="bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 py-1 px-3 rounded-full text-xs font-medium"><?= count($services) ?>
+                    New</span>
             </div>
-             <div class="divide-y divide-gray-100">
+            <div class="divide-y divide-gray-100 dark:divide-gray-700">
                 <?php if (count($services) > 0): ?>
                     <?php foreach ($services as $s): ?>
-                    <div class="p-6 hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center justify-between mb-2">
-                             <h4 class="text-sm font-bold text-gray-900"><?= htmlspecialchars($s['project_name']) ?></h4>
-                             <span class="text-xs text-gray-400"><?= date('M d', strtotime($s['request_date'])) ?></span>
+                        <div class="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-sm font-bold text-gray-900 dark:text-white">
+                                    <?= htmlspecialchars($s['project_name']) ?></h4>
+                                <span
+                                    class="text-xs text-gray-400 dark:text-gray-500"><?= date('M d', strtotime($s['request_date'])) ?></span>
+                            </div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                                <?= htmlspecialchars($s['service_description']) ?></p>
+                            <form method="POST" action="admin/approve_service.php">
+                                <input type="hidden" name="service_id" value="<?= $s['service_id'] ?>">
+                                <button type="submit" name="action" value="approve"
+                                    class="w-full inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-brand-600 hover:bg-brand-700">
+                                    Approve Request
+                                </button>
+                            </form>
                         </div>
-                        <p class="text-sm text-gray-500 mb-4"><?= htmlspecialchars($s['service_description']) ?></p>
-                         <form method="POST" action="admin/approve_service.php">
-                            <input type="hidden" name="service_id" value="<?= $s['service_id'] ?>">
-                            <button type="submit" name="action" value="approve" class="w-full inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-brand-600 hover:bg-brand-700">
-                                Approve Request
-                            </button>
-                        </form>
-                    </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                   <div class="p-6 text-center text-gray-500">
-                        <i class="fas fa-tools text-4xl text-gray-300 mb-3 block"></i>
+                    <div class="p-6 text-center text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-tools text-4xl text-gray-300 dark:text-gray-600 mb-3 block"></i>
                         No new service requests.
                     </div>
                 <?php endif; ?>
             </div>
         </div>
     </div>
-    
+
     <!-- Recent Users -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-        <div class="p-6 border-b border-gray-100">
-            <h3 class="text-lg font-bold text-gray-900">Recent Users</h3>
+    <div
+        class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+        <div class="p-6 border-b border-gray-100 dark:border-gray-700">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Recent Users</h3>
         </div>
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-900/50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            Name</th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            Role</th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            Email</th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            Joined</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     <?php foreach ($users_recent as $u): ?>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?= htmlspecialchars($u['name']) ?></td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 uppercase text-xs"><?= htmlspecialchars($u['role']) ?></td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= htmlspecialchars($u['email']) ?></td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?= date('M d, Y', strtotime($u['created_at'])) ?></td>
-                    </tr>
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                <?= htmlspecialchars($u['name']) ?></td>
+                            <td
+                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 uppercase text-xs">
+                                <?= htmlspecialchars($u['role']) ?></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                <?= htmlspecialchars($u['email']) ?></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                <?= date('M d, Y', strtotime($u['created_at'])) ?></td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>

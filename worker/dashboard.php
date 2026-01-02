@@ -1,6 +1,9 @@
 <?php
 // Worker Dashboard
-if (!defined('APP_RUNNING')) { header("Location: ../dashboard.php"); exit; }
+if (!defined('APP_RUNNING')) {
+    header("Location: ../dashboard.php");
+    exit;
+}
 
 $worker_id = $_SESSION['user_id'];
 
@@ -28,9 +31,10 @@ $service_tasks = $stmt->fetchAll();
 ?>
 
 <div class="max-w-4xl mx-auto space-y-6">
-    
-    <?php if(isset($success)): ?>
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+
+    <?php if (isset($success)): ?>
+        <div
+            class="bg-green-100 dark:bg-green-900/30 border border-green-400 dark:border-green-600 text-green-700 dark:text-green-300 px-4 py-3 rounded relative">
             <i class="fas fa-check-circle mr-2"></i> <?= $success ?>
         </div>
     <?php endif; ?>
@@ -41,42 +45,48 @@ $service_tasks = $stmt->fetchAll();
         <?php if (count($tasks) > 0): ?>
             <div class="space-y-4">
                 <?php foreach ($tasks as $task): ?>
-                <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-transform hover:-translate-y-1 duration-200">
-                    <div class="flex items-start gap-4">
-                         <div class="flex-shrink-0">
-                            <div class="h-12 w-12 rounded-full bg-brand-50 flex items-center justify-center text-brand-600">
-                                <i class="fas fa-hammer"></i>
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-transform hover:-translate-y-1 duration-200">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0">
+                                <div
+                                    class="h-12 w-12 rounded-full bg-brand-50 dark:bg-brand-900/30 flex items-center justify-center text-brand-600 dark:text-brand-400">
+                                    <i class="fas fa-hammer"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h3 class="font-bold text-gray-900 dark:text-white">
+                                        <?= htmlspecialchars($task['project_name']) ?></h3>
+                                    <?php renderStatusBadge($task['status']); ?>
+                                </div>
+                                <p class="text-gray-600 dark:text-gray-300 font-medium mb-1">
+                                    <?= htmlspecialchars($task['task_description']) ?></p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">
+                                    <i class="far fa-clock mr-1"></i> Due: <?= date('M d, Y', strtotime($task['end_date'])) ?>
+                                </p>
                             </div>
                         </div>
-                        <div>
-                            <div class="flex items-center gap-2 mb-1">
-                                <h3 class="font-bold text-gray-900"><?= htmlspecialchars($task['project_name']) ?></h3>
-                                <?php renderStatusBadge($task['status']); ?>
+
+                        <?php if ($task['status'] !== 'completed'): ?>
+                            <form method="POST" action="">
+                                <input type="hidden" name="assignment_id" value="<?= $task['assignment_id'] ?>">
+                                <button type="submit"
+                                    class="w-full md:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                    <i class="fas fa-check mr-2"></i> Mark Done
+                                </button>
+                            </form>
+                        <?php else: ?>
+                            <div class="text-green-600 font-medium flex items-center">
+                                <i class="fas fa-check-double mr-2"></i> Done
                             </div>
-                            <p class="text-gray-600 font-medium mb-1"><?= htmlspecialchars($task['task_description']) ?></p>
-                            <p class="text-xs text-gray-500">
-                                <i class="far fa-clock mr-1"></i> Due: <?= date('M d, Y', strtotime($task['end_date'])) ?>
-                            </p>
-                        </div>
+                        <?php endif; ?>
                     </div>
-                    
-                    <?php if ($task['status'] !== 'completed'): ?>
-                    <form method="POST" action="">
-                        <input type="hidden" name="assignment_id" value="<?= $task['assignment_id'] ?>">
-                        <button type="submit" class="w-full md:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                            <i class="fas fa-check mr-2"></i> Mark Done
-                        </button>
-                    </form>
-                    <?php else: ?>
-                    <div class="text-green-600 font-medium flex items-center">
-                        <i class="fas fa-check-double mr-2"></i> Done
-                    </div>
-                    <?php endif; ?>
-                </div>
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-             <div class="bg-white rounded-lg p-12 text-center border-2 border-dashed border-gray-200 text-gray-400">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-lg p-12 text-center border-2 border-dashed border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500">
                 <i class="fas fa-mug-hot text-4xl mb-3"></i>
                 <p>No active tasks. Enjoy your break!</p>
             </div>
@@ -85,27 +95,32 @@ $service_tasks = $stmt->fetchAll();
 
     <!-- Service Tasks -->
     <?php if (count($service_tasks) > 0): ?>
-    <div class="mt-8">
-        <?php renderSectionHeader("After-Sale Service Jobs", "", "", "orange"); ?>
-        <div class="space-y-4">
-             <?php foreach ($service_tasks as $st): ?>
-                <div class="bg-white rounded-lg shadow-sm border border-l-4 border-orange-400 p-6">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="font-bold text-gray-900"><?= htmlspecialchars($st['project_name']) ?></h4>
-                            <p class="text-sm text-gray-600 mt-1"><?= htmlspecialchars($st['service_description']) ?></p>
-                              <p class="text-xs text-gray-400 mt-2">
-                                <i class="fas fa-calendar mr-1"></i> Assigned: <?= date('M d', strtotime($st['assigned_date'])) ?>
-                            </p>
+        <div class="mt-8">
+            <?php renderSectionHeader("After-Sale Service Jobs", "", "", "orange"); ?>
+            <div class="space-y-4">
+                <?php foreach ($service_tasks as $st): ?>
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-l-4 border-orange-400 dark:border-gray-700 dark:border-l-orange-400 p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-gray-900 dark:text-white"><?= htmlspecialchars($st['project_name']) ?>
+                                </h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                    <?= htmlspecialchars($st['service_description']) ?></p>
+                                <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">
+                                    <i class="fas fa-calendar mr-1"></i> Assigned:
+                                    <?= date('M d', strtotime($st['assigned_date'])) ?>
+                                </p>
+                            </div>
+                            <span
+                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300">
+                                Service
+                            </span>
                         </div>
-                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">
-                            Service
-                        </span>
                     </div>
-                </div>
-             <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
         </div>
-    </div>
     <?php endif; ?>
 
 </div>
